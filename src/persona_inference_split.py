@@ -40,7 +40,7 @@ def get_args():
     parser.add_argument('--s3_bucket', required=True, help='S3 bucket for batch inference')
     parser.add_argument('--s3_prefix', default='batch-inference/experiments', help='S3 prefix for batch files')
     parser.add_argument('--check_interval', type=int, default=60, help='Seconds between job status checks')
-    parser.add_argument('--aws_profile', default='shopper-agents-role', help='AWS profile name')
+    parser.add_argument('--aws_profile', default=None, help='AWS profile name (default: standard AWS credential chain)')
     
     args = parser.parse_args()
     return args

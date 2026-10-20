@@ -6,3 +6,5 @@ __pycache__/
 dataset/
 output/
 .history
+out/
+venv/
