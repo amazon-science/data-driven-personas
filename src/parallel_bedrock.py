@@ -33,8 +33,8 @@ def call_bedrock_model(model_id, system_prompt, user_prompt, param_dict, region_
     Call AWS Bedrock model with unified formatting.
     Uses the same format as batch inference.
     """
-    # Create boto3 client with ada profile
-    session = boto3.Session(profile_name='us-east-1')
+    # Uses the standard AWS credential chain (AWS_PROFILE, env vars, instance role)
+    session = boto3.Session()
     client = session.client(
         service_name='bedrock-runtime',
         region_name=region_name,
