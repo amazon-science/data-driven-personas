@@ -213,13 +213,11 @@ Results are saved in CSV format with:
 - Per-demographic-group breakdowns
 - Top-5 best- and worst-performing personas
 
-Example (`simbench_opinionqa_W29_verbalized.csv`, Llama-3.3-70B baseline on OpinionQA W29):
+Example output structure:
 
-| Method | SimScore | TVD | KL-divergence | WD |
-|---|---:|---:|---:|---:|
-| Without Description | 48.86 | 0.199 | 0.158 | 0.297 |
-| General Description | 51.35 | 0.193 | 0.141 | 0.283 |
-| Demographic Description | 53.39 | 0.181 | 0.154 | 0.267 |
+| Method                         | Num Instances | SimScore |  TVD  | KL-divergence |  WD  | AVG None_cnt |
+|-------------------------------|--------------:|---------:|------:|--------------:|-----:|-------------:|
+| 10_bio_personas_verbalized_100% |           150 |     85.2 | 0.148 |         0.234 | 0.156 |          0.0 |
 
 ## Dataset Preparation
 
