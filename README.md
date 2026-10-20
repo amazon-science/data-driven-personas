@@ -274,8 +274,13 @@ The framework uses AWS Bedrock for LLM inference:
 
 If you use this framework in your research, please cite:
 
-```text
-[Citation information to be added]
+```bibtex
+@inproceedings{lee2026datadriven,
+      title={Data-Driven Personas for Survey Simulation: Insights into Simulation Alignment Across Data-Access Regimes}, 
+      author={Dongryeol Lee and Weronika {\L}ajewska and Leonardo Perelli and Saab Mansour},
+      booktitle={Proceedings of the Workshop on Research on Agent Language Models (REALM) at EMNLP 2026},
+      year={2026},
+}
 ```
 
 ## Security
