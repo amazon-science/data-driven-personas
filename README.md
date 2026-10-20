@@ -81,50 +81,6 @@ export BEDROCK_BATCH_ROLE_ARN=<IAM role ARN that Bedrock batch inference can ass
 
 You need your own AWS account with access to the Amazon Bedrock models you want to use.
 
-## Quick Start: Reproduce a Baseline
-
-This walkthrough reproduces the B1 baseline (no demographic context) for Llama-3.3-70B on OpinionQA Wave 29, reported in Table 5 of the paper. It needs no persona generation. Run all commands from the repository root.
-
-1. Install the dependencies (see [Installation](#installation)) and configure AWS credentials with Amazon Bedrock access in `us-east-1`.
-
-2. Download the OpinionQA Wave 29 human responses (`info.csv`, `metadata.csv`, `responses.csv`) from the `human_resp` bundle of the [OpinionQA CodaLab worksheet](https://worksheets.codalab.org/worksheets/0x6fb693719477478aac73fc07db333f69):
-
-   ```bash
-   mkdir -p dataset/opinionqa/American_Trends_Panel_W29
-   for f in info.csv metadata.csv responses.csv; do
-     curl -L -o dataset/opinionqa/American_Trends_Panel_W29/$f \
-       "https://worksheets.codalab.org/rest/bundles/0x050b7e72abb04d1f9b493c1743e580cf/contents/blob/human_resp/American_Trends_Panel_W29/$f"
-   done
-   ```
-
-3. Build the per-user and grouped test files. Keep `wave='29'` (the default) and run, from the repository root:
-   - the "OpinionQA preprocess" section of `dataset_preprocess/260107_gss_opinionqa_persona_preprocess.ipynb`, which writes `opinionqa_W29_per_user_with_gt.json`;
-   - the "OpinionQA preprocess" section of `dataset_preprocess/260113_opinionqa_gss_test_data_preprocess.ipynb`, which writes `opinionqa_W29_grouped.json` (77 questions, 3,868 test instances).
-
-4. Run baseline inference and evaluation:
-
-   ```bash
-   export BEDROCK_BATCH_ROLE_ARN=<IAM role ARN that Bedrock batch inference can assume>
-   python src/single_inference_batch.py \
-     --data_dir dataset/opinionqa/American_Trends_Panel_W29/opinionqa_W29_grouped.json \
-     --sim_model llama3.3-70b --output_type verbalized --max_token 1024 \
-     --data_name opinionqa_W29 --eval_only false --num_inference 1 --temperature 0.0 \
-     --s3_bucket <your-bucket> --s3_prefix <your-prefix>/opinionqa_W29 \
-     --check_interval 60 --aws_profile <your-aws-profile>
-   ```
-
-   The script calls Bedrock directly for the 77 B1 prompts, then submits one Bedrock batch job (3,868 prompts) for B2 and B3. The batch job typically finishes in 15 to 30 minutes and uses about 0.9M input and 0.1M output tokens.
-
-5. Results are written to `out/b1_single/llama3.3-70b/simbench_opinionqa_W29_verbalized.csv`. Expected values (small run-to-run differences are possible):
-
-   | Method | Paper TVD | Paper WD | Reproduced TVD | Reproduced WD |
-   |---|---:|---:|---:|---:|
-   | B1 (Without Description) | 0.200 | 0.295 | 0.199 | 0.297 |
-   | B2 (General Description) | 0.188 | 0.279 | 0.193 | 0.283 |
-   | B3 (Demographic Description) | 0.181 | 0.264 | 0.181 | 0.267 |
-
-   Claude 3.7 Sonnet, the main simulator in the paper, has reached end of life on Amazon Bedrock, so Table 1 can no longer be reproduced exactly. Llama-3.3-70B and Qwen3-32B (Table 5) are still available.
-
 ## Usage
 
 ### Generate Personas
@@ -257,7 +213,7 @@ Results are saved in CSV format with:
 - Per-demographic-group breakdowns
 - Top-5 best- and worst-performing personas
 
-Example (`simbench_opinionqa_W29_verbalized.csv`, Llama-3.3-70B, from the [Quick Start](#quick-start-reproduce-a-baseline)):
+Example (`simbench_opinionqa_W29_verbalized.csv`, Llama-3.3-70B baseline on OpinionQA W29):
 
 | Method | SimScore | TVD | KL-divergence | WD |
 |---|---:|---:|---:|---:|
@@ -273,7 +229,7 @@ Example (`simbench_opinionqa_W29_verbalized.csv`, Llama-3.3-70B, from the [Quick
 
 ### OpinionQA
 
-- Original OpinionQA data is described at `https://github.com/tatsu-lab/opinions_qa`. The per-wave human responses (`human_resp/American_Trends_Panel_W*/{info,metadata,responses}.csv`) are in the `human_resp` bundle of the [OpinionQA CodaLab worksheet](https://worksheets.codalab.org/worksheets/0x6fb693719477478aac73fc07db333f69). The [Quick Start](#quick-start-reproduce-a-baseline) has a download command.
+- Original OpinionQA data is described at `https://github.com/tatsu-lab/opinions_qa`. The per-wave human responses (`human_resp/American_Trends_Panel_W*/{info,metadata,responses}.csv`) are in the `human_resp` bundle of the [OpinionQA CodaLab worksheet](https://worksheets.codalab.org/worksheets/0x6fb693719477478aac73fc07db333f69).
 
 ### SocSci210
 
