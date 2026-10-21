@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.aws_batch_config
+dataset/
+output/
+.history
+out/
+venv/
